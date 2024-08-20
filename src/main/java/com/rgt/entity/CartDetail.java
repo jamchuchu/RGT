@@ -13,7 +13,10 @@ public class CartDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartDetailId;
 
-    private Long cartId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
     private Long menuId;
     private Long menuQuantity;
 }

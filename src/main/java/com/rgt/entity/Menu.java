@@ -13,7 +13,9 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long menuId;
 
-    private Long cafeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Cafe cafe;
+
     private String menuName;
     private Long menuPrice;
     private String menuInfo;

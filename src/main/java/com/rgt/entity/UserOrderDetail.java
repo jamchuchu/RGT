@@ -5,15 +5,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "order_detail")
+@Table(name = "user_order_detail")
 @Getter
 @Setter
-public class OrderDetail {
+public class UserOrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderDetailId;
+    private Long userOrderDetailId;
 
-    private Long orderId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_order_id")
+    private UserOrder userOrder;
+
     private Long menuId;
     private Long menuQuantity;
+
+
 }
