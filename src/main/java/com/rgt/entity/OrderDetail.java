@@ -13,7 +13,7 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderDetailId;
 
-    private String orderId;
-    private String menuId;
-    private String menuQuantity;
+    private Long orderId;
+    private Long menuId;
+    private Long menuQuantity;
 }

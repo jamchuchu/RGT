@@ -13,7 +13,7 @@ public class CartDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartDetailId;
 
-    private String cartId;
-    private String menuId;
-    private String menuQuantity;
+    private Long cartId;
+    private Long menuId;
+    private Long menuQuantity;
 }

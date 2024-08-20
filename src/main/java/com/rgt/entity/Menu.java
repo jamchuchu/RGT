@@ -13,8 +13,8 @@ public class Menu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long menuId;
 
-    private String cafeId;
+    private Long cafeId;
     private String menuName;
-    private String menuPrice;
+    private Long menuPrice;
     private String menuInfo;
 }

@@ -13,6 +13,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
-    private String tableId;
+    private Long tableId;
     private String orderState;
 }
