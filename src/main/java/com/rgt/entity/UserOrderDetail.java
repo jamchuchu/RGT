@@ -13,8 +13,9 @@ public class UserOrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userOrderDetailId;
 
-
-    private Long userOrderId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_order_id")
+    private UserOrder userOrder;
 
     private Long menuId;
     private Long menuQuantity;
