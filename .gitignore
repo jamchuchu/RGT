@@ -37,3 +37,4 @@ out/
 .vscode/
 
 ./application.yml
+src/main/java/com/rgt/contorller/TestController.java
