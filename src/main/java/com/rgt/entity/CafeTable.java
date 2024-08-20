@@ -11,6 +11,8 @@ import lombok.Setter;
 public class CafeTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long cafeTableId;
+
     private Long tableId;
 
     @ManyToOne(fetch = FetchType.LAZY)
