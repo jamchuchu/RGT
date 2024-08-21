@@ -3,7 +3,7 @@ package com.rgt.constants;
 import org.springframework.security.core.GrantedAuthority;
 
 public enum Authority implements GrantedAuthority {
-    CAFE_OWNER("ROLE_OWNER"),
+    OWNER("ROLE_OWNER"),
     USER("ROLE_USER");
 
     private final String authority;

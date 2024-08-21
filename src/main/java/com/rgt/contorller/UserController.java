@@ -31,7 +31,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<UserDetails> signup(@RequestParam(name = "authority") Authority authority, @RequestBody UserReqDto reqDto){
         UserDetails user = null;
-        if(authority.equals(Authority.CAFE_OWNER)){
+        if(authority.equals(Authority.OWNER)){
             user = userService.saveUserForOwner(reqDto);
         }else if(authority.equals( Authority.USER)){
             user = userService.saveUserForUser(reqDto);
