@@ -1,10 +1,10 @@
 package com.rgt.contorller;
 
+import com.rgt.service.JwtService;
 import com.rgt.constants.Authority;
-import com.rgt.entity.User;
 import com.rgt.request.UserReqDto;
-import com.rgt.service.CafeService;
 import com.rgt.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpHeaders;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     //회원가입
     @PostMapping("/signup")
@@ -44,19 +49,29 @@ public class UserController {
                     new UsernamePasswordAuthenticationToken(
                             reqDto.getUsername(),
                             reqDto.getPassword()
-
                 )
             );
-
             //토큰 리턴
+            String token = jwtService.generateToken((UserDetails) authentication.getPrincipal());
+            // JWT 토큰을 헤더에 포함
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", "Bearer " + token);
+
+            // 토큰과 함께 사용자 정보를 반환
+            Map<String, Object> responseBody = new HashMap<>();
+            responseBody.put("token", token);
+            responseBody.put("principal", authentication.getPrincipal());
 
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(authentication);
+                    .headers(headers)
+                    .body(responseBody);
+
         }catch (Exception e){
+            log.info(e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body("Fail");
+                    .body(e);
         }
 
     }
