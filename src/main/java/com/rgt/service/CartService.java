@@ -19,7 +19,6 @@ import java.util.Map;
 public class CartService {
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
-    private final RedisService redisService;
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 
