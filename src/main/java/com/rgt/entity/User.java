@@ -4,6 +4,7 @@ import com.rgt.constants.Authority;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,13 +13,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
 @Getter
-@Setter
+@Builder
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,7 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -39,9 +40,9 @@ public class User implements UserDetails {
         return this.username;
     }
 
-    public static User of(String userName, String password, Authority authority) {
+    public static User of(String username, String password, Authority authority) {
         return User.builder()
-                .username(userName)
+                .username(username)
                 .password(password)
                 .authority(authority)
                 .build();

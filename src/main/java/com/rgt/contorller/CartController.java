@@ -17,37 +17,32 @@ import java.util.Map;
 public class CartController {
     private final CartService cartService;
 
-    //장바구니 메뉴 추가
+    //장바구니 메뉴 원하는 만큼 추가
     @PostMapping("/menu")
     public ResponseEntity<?> addMenuToCart(@RequestBody MenuReqDtoForCart reqDto) throws JsonProcessingException {
-        Map<String, Long> cart;
-        try {
-           cart = cartService.addMenuToCart(
-                   reqDto.getCafeId(),
-                   reqDto.getTableNumber(),
-                   reqDto.getMenuName(),
-                   reqDto.getAddMenuQuantity()
-           );
-        }catch (Exception e){
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e);
-        }
+        Map<Long, Long> cart = cartService.addMenuToCart(
+               reqDto.getCafeId(),
+               reqDto.getTableNumber(),
+               reqDto.getMenuId(),
+               reqDto.getMenuQuantity()
+       );
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(cart);
     }
 
 
-    // 카트에 메뉴 수량 감소 -- 1개씩 감소
+    // 카트에 메뉴 수량 수정
     @PatchMapping("/menu")
-    public ResponseEntity<?> reduceMenuToCart(@RequestBody MenuReqDtoForCart reqDto) throws JsonProcessingException {
-        Map<String, Long> cart;
+    public ResponseEntity<?> modifyMenuToCart(@RequestBody MenuReqDtoForCart reqDto) throws JsonProcessingException {
+        Map<Long, Long> cart;
         try {
-            cart = cartService.reduceMenuToCart(
+            cart = cartService.modifyMenuToCart(
                     reqDto.getCafeId(),
                     reqDto.getTableNumber(),
-                    reqDto.getMenuName()
+                    reqDto.getMenuId(),
+                    reqDto.getMenuQuantity()
             );
         }catch (Exception e){
             return ResponseEntity
@@ -62,12 +57,12 @@ public class CartController {
     // 카트에 메뉴 삭제
     @DeleteMapping("/menu")
     public ResponseEntity<?> removeMenuToCart(@RequestBody MenuReqDtoForCart reqDto) throws JsonProcessingException {
-        Map<String, Long> cart;
+        Map<Long, Long> cart;
         try {
             cart = cartService.removeMenuToCart(
                     reqDto.getCafeId(),
                     reqDto.getTableNumber(),
-                    reqDto.getMenuName()
+                    reqDto.getMenuId()
             );
         }catch (Exception e){
             return ResponseEntity
@@ -80,19 +75,13 @@ public class CartController {
     }
 
     //장바구니 조회
-    @GetMapping("")
-    public ResponseEntity<?> getCart(@RequestBody CafeTableReqDto reqDto) {
-        Map<String, Long> cart;
-        try {
-            cart = cartService.getTableCart(
-                    reqDto.getCafeId(),
-                    reqDto.getTableNumber()
-            );
-        }catch (Exception e){
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e);
-        }
+    @GetMapping("/cafe/table")
+    public ResponseEntity<?> getCart(
+            @RequestParam(name = "cafeId") Long cafeId,
+            @RequestParam(name = "tableNumber") Long tableNumber)throws JsonProcessingException {
+
+        Map<Long, Long> cart = cartService.getTableCart(cafeId, tableNumber);
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(cart);

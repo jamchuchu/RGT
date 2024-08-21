@@ -1,6 +1,6 @@
 package com.rgt.contorller;
 
-import com.rgt.service.JwtService;
+import com.rgt.config.JwtConfig;
 import com.rgt.constants.Authority;
 import com.rgt.dto.request.UserReqDto;
 import com.rgt.service.UserService;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
+    private final JwtConfig jwtConfig;
 
     //회원가입
     @PostMapping("/signup")
@@ -51,14 +51,18 @@ public class UserController {
                 )
             );
             //토큰 리턴
-            String token = jwtService.generateToken((UserDetails) authentication.getPrincipal());
+            String accessToken = jwtConfig.generateToken((UserDetails) authentication.getPrincipal());
+            String refreshToken = jwtConfig.generateRefreshToken((UserDetails) authentication.getPrincipal());
+
             // JWT 토큰을 헤더에 포함
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + token);
+            headers.add("Authorization", "Bearer " + accessToken);
+            headers.add("refreshToken", refreshToken);
 
             // 토큰과 함께 사용자 정보를 반환
             Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("token", token);
+            responseBody.put("accessToken", accessToken);
+            responseBody.put("refreshToken", refreshToken);
             responseBody.put("principal", authentication.getPrincipal());
 
             return ResponseEntity

@@ -3,6 +3,8 @@ package com.rgt.service;
 import com.rgt.constants.OrderState;
 import com.rgt.dto.response.OrderRespDto;
 import com.rgt.dto.request.OrderReqDto;
+import com.rgt.entity.Menu;
+import com.rgt.entity.User;
 import com.rgt.entity.UserOrder;
 import com.rgt.repository.OrderDetailRepository;
 import com.rgt.repository.OrderRepository;
@@ -17,13 +19,13 @@ import java.util.List;
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final OrderDetailRepository orderDetailRepository;
     private final EntityManager entityManager;
 
 
     // 주문 추가
     public OrderRespDto saveOrder(OrderReqDto reqDto){
-        UserOrder responseOrder = orderRepository.save(UserOrder.from(reqDto));
+        User user = entityManager.find(User.class, reqDto.getUserId());
+        UserOrder responseOrder = orderRepository.save(UserOrder.from(user, reqDto));
         return OrderRespDto.from(responseOrder);
     }
 
@@ -67,6 +69,12 @@ public class OrderService {
     }
 
 
+    //주문 조회 by userId
+    public List<OrderRespDto> getUserOrderByUserId(Long userId) {
+        List<UserOrder> orders = orderRepository.getUserOrdersByUserUserId(userId);
+        return orders.stream().map(OrderRespDto::from).toList();
+    }
+
     // 주문 조회 테이블 별로(confirm 상태인것 만)
     public List<OrderRespDto> getUserOrderWithConfirm(Long cafeId, Long tableNumber) {
         List<UserOrder> orders = orderRepository.getUserOrdersByCafeIdAndTableNumberAndOrderState(
@@ -85,5 +93,6 @@ public class OrderService {
         );
         return orders.stream().map(OrderRespDto::from).toList();
     }
+
 
 }

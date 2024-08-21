@@ -2,6 +2,7 @@ package com.rgt.config;
 
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
@@ -59,6 +60,8 @@ public class RedisConfig {
 
         // Value serializer
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(DeserializationFeature.USE_LONG_FOR_INTS);
+
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 

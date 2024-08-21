@@ -9,17 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Builder
 @Entity
 @Table(name = "user_order")
 @Getter
-@Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userOrderId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private Long cafeId;
     private Long tableNumber;
@@ -30,8 +33,13 @@ public class UserOrder {
     @OneToMany(mappedBy = "userOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserOrderDetail> orderDetails;
 
-    public static UserOrder from(OrderReqDto reqDto) {
+    public void setOrderDetails(List<UserOrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
+    public static UserOrder from(User user, OrderReqDto reqDto) {
         UserOrder userOrder = UserOrder.builder()
+                .user(user)
                 .cafeId(reqDto.getCafeId())
                 .tableNumber(reqDto.getTableNumber())
                 .orderState(OrderState.CONFIRM)
@@ -45,5 +53,9 @@ public class UserOrder {
         userOrder.setOrderDetails(details);
 
         return userOrder;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
     }
 }

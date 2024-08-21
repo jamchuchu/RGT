@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 public class OrderRespDto {
+    private Long userId;
     private Long userOrderId;
     private Long cafeId;
     private Long tableNumber;
@@ -26,6 +27,7 @@ public class OrderRespDto {
 
     public static OrderRespDto from(UserOrder userOrder){
         return OrderRespDto.builder()
+                .userId(userOrder.getUser().getUserId())
                 .userOrderId(userOrder.getUserOrderId())
                 .cafeId(userOrder.getCafeId())
                 .tableNumber(userOrder.getTableNumber())

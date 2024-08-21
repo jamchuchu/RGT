@@ -1,27 +1,36 @@
-package com.rgt.service;
+package com.rgt.config;
 
+import com.rgt.service.UserService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.security.Principal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@RequiredArgsConstructor
 @Component
-public class JwtService {
+public class JwtConfig {
+
+    private final UserService userDetailsService;
 
     @Value("${jwt.secret}")
     private String secret;
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
+
+    @Value("${jwt.expirationForRefresh}")
+    private long refreshExpiration;
+
 
     private Key key;
 
@@ -46,6 +55,29 @@ public class JwtService {
                 .compact();
     }
 
+    private String createRefreshToken(String subject){
+        return Jwts.builder()
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return createRefreshToken(userDetails.getUsername());
+    }
+
+
+    public String generateNewAccessToken(String refreshToken) {
+        final String username = extractUsername(refreshToken);
+        if (username != null && !isTokenExpired(refreshToken)) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            return generateToken(userDetails);
+        }
+        return null;
+    }
+
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -68,7 +100,7 @@ public class JwtService {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 }

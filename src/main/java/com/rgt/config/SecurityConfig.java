@@ -38,22 +38,27 @@ public class SecurityConfig {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-//
+
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//
+
                 .authorizeHttpRequests((authorizationRequests) -> authorizationRequests
 //                                .anyRequest().permitAll()
 
                                 .requestMatchers("/api/user/login", "/api/user/signup").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
 //                                .requestMatchers("/test").hasAuthority(Authority.USER.getAuthority())
-                                .requestMatchers("/test").hasAuthority(Authority.USER.getAuthority())
-                                .requestMatchers("/api/**").hasAuthority(Authority.USER.getAuthority()) //owner변경 예정
-//                        .anyRequest().authenticated()
+
+                                .requestMatchers("/api/cart/cafe/table/**").hasAnyAuthority(Authority.OWNER.getAuthority(), Authority.USER.getAuthority())
+                                .requestMatchers("/api/cart/**").hasAuthority(Authority.USER.getAuthority())
+
+                                .requestMatchers("/api/cafe/**").hasAuthority(Authority.OWNER.getAuthority())
+
+                                .requestMatchers("/api/order/**", "/api/order").hasAuthority(Authority.USER.getAuthority()) //owner변경 예정
+                                .requestMatchers("/api/menu/**").hasAuthority(Authority.USER.getAuthority()) //owner변경 예정
                 )
 
-//        // 필터 관리
+        // 필터 관리
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

@@ -13,6 +13,6 @@ public class MenuReqDtoForCart {
     private Long cafeId;
     private Long tableNumber;
 
-    private String menuName;
-    private Long addMenuQuantity;
+    private Long menuId;
+    private Long menuQuantity;
 }

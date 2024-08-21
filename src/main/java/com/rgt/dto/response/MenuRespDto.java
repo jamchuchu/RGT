@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class MenuRespDto {
-
     private Long menuId;
     private String menuName;
     private Long menuPrice;

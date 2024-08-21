@@ -29,10 +29,10 @@ public class CafeService {
 
     // 카페 테이블 입력(테이블 개수)
     public void saveCafeTable(Long cafeId, Long tableCount) throws JsonProcessingException {
-        Map<Long, Map<String, Long>> carts = new HashMap<>();
+        Map<Long, Map<Long, Long>> carts = new HashMap<>();
 
         for(Long tableNumber = 1L; tableNumber <= tableCount ; tableNumber++){
-            Map<String, Long> cart = new HashMap<>();
+            Map<Long, Long> cart = new HashMap<>();
             carts.put(tableNumber, cart);
         }
         cartService.saveCarts(cafeId, carts);

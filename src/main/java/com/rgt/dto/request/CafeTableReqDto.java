@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class CafeTableReqDto {
+    private Long userId;
     private Long cafeId;
     private Long tableNumber;
 }

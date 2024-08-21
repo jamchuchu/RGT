@@ -27,8 +27,8 @@ public class MenuController {
     }
 
     //메뉴 단품 확인
-    @GetMapping("")
-    public ResponseEntity<?> getMenu(@RequestParam Long menuId) {
+    @GetMapping("/")
+    public ResponseEntity<?> getMenu(@RequestParam(name = "menuId") Long menuId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(menuService.getMenuDetail(menuId));
