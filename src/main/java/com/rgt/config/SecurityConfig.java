@@ -1,4 +1,6 @@
 package com.rgt.config;
+import com.rgt.config.filter.JwtAuthorizationFilter;
+import com.rgt.constants.Authority;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -27,7 +29,8 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 public class SecurityConfig {
 
-    private final AuthenticationConfiguration authenticationConfiguration;
+//    private final AuthenticationConfiguration authenticationConfiguration;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
 
     @Bean
@@ -51,24 +54,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http)  throws Exception {
         http
-//                .httpBasic(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
 //
-//                .sessionManagement(AbstractHttpConfigurer::disable)
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //
                 .authorizeHttpRequests((authorizationRequests) -> authorizationRequests
 //                                .anyRequest().permitAll()
-                        .requestMatchers("/api/user/login", "/api/user/signup").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
-//                         .requestMatchers("/api/*").hasRole(Role.USER.getAuthority())\
+
+                                .requestMatchers("/api/user/login", "/api/user/signup").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/test").hasAuthority(Authority.USER.getAuthority())
 //                        .anyRequest().authenticated()
-                );
+                )
 
 //        // 필터 관리
-//        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
-//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }
