@@ -20,13 +20,15 @@ public class CafeService {
     private final CartService cartService ;
 
     //카페 입력
-    public Cafe saveCafe(Long tableCount){
+    public Cafe saveCafe(Long tableCount) throws JsonProcessingException {
         Cafe cafe = new Cafe(0L, tableCount, new ArrayList<>());
-        return cafeRepository.save(cafe);
+        cafe = cafeRepository.save(cafe);
+        saveCafeTable(cafe.getCafeId(), tableCount);
+        return cafe;
     }
 
     // 카페 테이블 입력(테이블 개수)
-    public Map<Long, Map<String, Long>> saveCafe(Long cafeId, Long tableCount) throws JsonProcessingException {
+    public void saveCafeTable(Long cafeId, Long tableCount) throws JsonProcessingException {
         Map<Long, Map<String, Long>> carts = new HashMap<>();
 
         for(Long tableNumber = 1L; tableNumber <= tableCount ; tableNumber++){
@@ -34,7 +36,6 @@ public class CafeService {
             carts.put(tableNumber, cart);
         }
         cartService.saveCarts(cafeId, carts);
-        return cartService.getCarts(cafeId);
     }
 
 

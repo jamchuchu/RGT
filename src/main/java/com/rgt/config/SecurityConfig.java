@@ -46,8 +46,10 @@ public class SecurityConfig {
 //                                .anyRequest().permitAll()
 
                                 .requestMatchers("/api/user/login", "/api/user/signup").permitAll()
-                                .requestMatchers("/swagger-ui/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+//                                .requestMatchers("/test").hasAuthority(Authority.USER.getAuthority())
                                 .requestMatchers("/test").hasAuthority(Authority.USER.getAuthority())
+                                .requestMatchers("/api/**").hasAuthority(Authority.USER.getAuthority()) //owner변경 예정
 //                        .anyRequest().authenticated()
                 )
 

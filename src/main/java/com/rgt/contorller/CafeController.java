@@ -16,14 +16,22 @@ import java.util.List;
 public class CafeController {
     private final CafeService cafeService;
 
-    //카페 별 메뉴 확인
-    @GetMapping("/menu/{cafeId}")
-    public ResponseEntity<List<MenuRespDto>> getCafeMenuByCafeId(@PathVariable("cafeId") Long cafeId) {
-        List<MenuRespDto> menus = cafeService.getCafeMenuByCafeId(cafeId);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(menus);
+    //카페 등록
+    @PostMapping("")
+    public ResponseEntity<?> saveCafe (@RequestParam(name = "cafeNumber") Long cafeNumber){
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(cafeService.saveCafe(cafeNumber));
+        }catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e);
+        }
     }
+
+
+
 
 
 
