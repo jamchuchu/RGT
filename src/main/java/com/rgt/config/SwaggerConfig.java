@@ -14,12 +14,19 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
+
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .components(new Components()
                         .addSecuritySchemes("bearer-key",
-                                new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
-                .info(new Info().title("Your API").version("v1"));
+                                new SecurityScheme()
+                                        .type(SecurityScheme.Type.HTTP)
+                                        .scheme("bearer")
+                                        .bearerFormat("JWT")
+                        )
+                )
+                .info(new Info().title("RGT").version("v1"))
+                .addSecurityItem(new SecurityRequirement().addList("bearer-key"));
     }
 }
