@@ -26,13 +26,13 @@ public class UserService implements UserDetailsService {
 
     //일반 회원가입
     public UserDetails saveUserForUser(UserReqDto reqDto){
-        User user = User.of(reqDto.getUserName(), passwordEncoder.encode(reqDto.getPassword()), Authority.USER);
+        User user = User.of(reqDto.getUsername(), passwordEncoder.encode(reqDto.getPassword()), Authority.USER);
         return userRepository.save(user);
     }
 
     //사장 회원가입
     public UserDetails saveUserForOwner(UserReqDto reqDto){
-        User user = User.of(reqDto.getUserName(), passwordEncoder.encode(reqDto.getPassword()), Authority.CAFE_OWNER);
+        User user = User.of(reqDto.getUsername(), passwordEncoder.encode(reqDto.getPassword()), Authority.CAFE_OWNER);
         return userRepository.save(user);
     }
 
