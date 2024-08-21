@@ -2,9 +2,8 @@ package com.rgt.contorller;
 
 import com.rgt.service.JwtService;
 import com.rgt.constants.Authority;
-import com.rgt.request.UserReqDto;
+import com.rgt.dto.request.UserReqDto;
 import com.rgt.service.UserService;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

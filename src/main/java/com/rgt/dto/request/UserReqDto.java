@@ -1,4 +1,4 @@
-package com.rgt.request;
+package com.rgt.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

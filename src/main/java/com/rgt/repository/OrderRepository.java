@@ -22,4 +22,8 @@ public interface OrderRepository extends JpaRepository<UserOrder, Long> {
             OrderState orderState
     );
 
+    List<UserOrder> getUserOrdersByCafeIdAndOrderState(
+            Long cafeId,
+            OrderState orderState);
+
 }

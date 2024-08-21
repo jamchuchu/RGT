@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rgt.repository.CafeRepository;
-import com.rgt.repository.CartDetailRepository;
-import com.rgt.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -17,8 +15,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class CartService {
-    private final CartRepository cartRepository;
-    private final CartDetailRepository cartDetailRepository;
     private final RedisTemplate<String, String> redisTemplate;
     private final ObjectMapper objectMapper;
 
@@ -68,10 +64,10 @@ public class CartService {
     }
 
     // 카트에 메뉴 수량 추가
-    public Map<String, Long> addMenuToCart(Long cafeId, Long tableNum, String menuName) throws JsonProcessingException {
+    public Map<String, Long> addMenuToCart(Long cafeId, Long tableNum, String menuName, Long addMenuQuantity) throws JsonProcessingException {
         Map<String, Long> cart = getTableCart(cafeId, tableNum);
         Long menuQuantity = cart.get(menuName) == null? 0L : cart.get(menuName);
-        cart.put(menuName, menuQuantity+1);
+        cart.put(menuName, menuQuantity + addMenuQuantity);
         saveTableCart(cafeId, tableNum, cart);
         return getTableCart(cafeId, tableNum);
     }

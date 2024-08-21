@@ -1,7 +1,7 @@
 package com.rgt.entity;
 
 import com.rgt.constants.OrderState;
-import com.rgt.dto.resquest.OrderReqDto;
+import com.rgt.dto.request.OrderReqDto;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -2,10 +2,8 @@ package com.rgt.service;
 
 import com.rgt.constants.Authority;
 import com.rgt.entity.User;
-import com.rgt.repository.CafeRepository;
 import com.rgt.repository.UserRepository;
-import com.rgt.request.UserReqDto;
-import jakarta.persistence.EntityManager;
+import com.rgt.dto.request.UserReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
