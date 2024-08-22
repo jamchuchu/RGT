@@ -5,8 +5,10 @@ import com.rgt.entity.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface MenuRepository extends JpaRepository<Menu, Long> {
-    Menu getMenuByMenuId(Long menuId);
-    Menu getMenuByCafeAndMenuName(Cafe cafe, String menuName);
+    Optional<Menu> getMenuByMenuId(Long menuId);
+    Optional<Menu> getMenuByCafeAndMenuName(Cafe cafe, String menuName);
 }

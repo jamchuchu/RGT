@@ -1,12 +1,14 @@
 package com.rgt.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.rgt.constants.ExceptionMessage;
 import com.rgt.dto.response.MenuRespDto;
 import com.rgt.entity.Cafe;
 import com.rgt.entity.Menu;
 import com.rgt.repository.CafeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +44,9 @@ public class CafeService {
     // 메뉴 확인 카페 별
     public List<MenuRespDto> getCafeMenuByCafeId(Long cafeId){
         List<Menu> menus = cafeRepository.findCafeByCafeId(cafeId).getMenus();
+        if(menus.isEmpty()){
+            throw new NotFoundException(ExceptionMessage.NOT_FOUND_ITEM_BY_ID);
+        }
         return menus.stream().map(MenuRespDto::from).toList();
     }
 }

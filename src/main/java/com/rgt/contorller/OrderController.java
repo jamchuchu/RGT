@@ -28,7 +28,7 @@ public class OrderController {
 
     // 카트 내용 전체 주문
     @PostMapping("/carts")
-    public ResponseEntity<?> orderCarts(@RequestBody CafeTableReqDto reqDto) throws JsonProcessingException {
+    public ResponseEntity<OrderRespDto> orderCarts(@RequestBody CafeTableReqDto reqDto) throws JsonProcessingException {
             //table 별 카트 들고오기
             Map<Long, Long> cart = cartService.getTableCart(reqDto.getCafeId(), reqDto.getTableNumber());
             if(cart.isEmpty()){
@@ -43,7 +43,7 @@ public class OrderController {
                     cart);
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(orderService.saveOrder(orderReqDto));
+                    .body(orderService.addOrder(orderReqDto));
     }
 
     // 주문 내용 확인하기

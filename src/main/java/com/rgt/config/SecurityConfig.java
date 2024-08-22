@@ -47,7 +47,7 @@ public class SecurityConfig {
 
                                 .requestMatchers("/api/user/login", "/api/user/signup").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
-//                                .requestMatchers("/test").hasAuthority(Authority.USER.getAuthority())
+                                .requestMatchers("/greeting").permitAll()
 
                                 .requestMatchers("/api/cart/cafe/table/**").hasAnyAuthority(Authority.OWNER.getAuthority(), Authority.USER.getAuthority())
                                 .requestMatchers("/api/cart/**").hasAuthority(Authority.USER.getAuthority())
