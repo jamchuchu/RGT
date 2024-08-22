@@ -40,6 +40,10 @@
 - 주문 상태를 완료 또는 취소로 변경 가능
 </br>
 
+## 전체 흐름 구상
+![image](https://github.com/user-attachments/assets/44b7c16f-4b06-4e5a-b54c-a352ba873808)
+
+
 ## API 명세서
 http://43.201.0.0:8080/swagger-ui/index.html#/
 ![image](https://github.com/user-attachments/assets/8c0e038d-1249-4051-b984-5ae005a6f2a9)
