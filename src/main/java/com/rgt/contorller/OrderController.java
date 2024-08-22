@@ -31,9 +31,6 @@ public class OrderController {
     public ResponseEntity<OrderRespDto> orderCarts(@RequestBody CafeTableReqDto reqDto) throws JsonProcessingException {
             //table 별 카트 들고오기
             Map<Long, Long> cart = cartService.getTableCart(reqDto.getCafeId(), reqDto.getTableNumber());
-            if(cart.isEmpty()){
-                //error
-            }
             cartService.resetTableCart(reqDto.getCafeId(), reqDto.getTableNumber());
 
             OrderReqDto orderReqDto = OrderReqDto.of(
@@ -48,7 +45,7 @@ public class OrderController {
 
     // 주문 내용 확인하기
     @GetMapping("/cafe/table")
-    public ResponseEntity<?> getUserOrderWithConfirm(@RequestBody CafeTableReqDto reqDto) {
+    public ResponseEntity<List<OrderRespDto>> getUserOrderWithConfirm(@RequestBody CafeTableReqDto reqDto) {
         List<OrderRespDto> response = orderService.getUserOrderWithConfirm(reqDto.getCafeId(), reqDto.getTableNumber());
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -57,34 +54,21 @@ public class OrderController {
 
     // 주문 내용 확인하기
     @GetMapping("/user")
-    public ResponseEntity<?> getUserOrderWithConfirm(@RequestParam(name = "userId") Long userId) {
-        try {
+    public ResponseEntity<List<OrderRespDto>> getUserOrderWithConfirm(@RequestParam(name = "userId") Long userId) {
             List<OrderRespDto> response = orderService.getUserOrderByUserId(userId);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(response);
-        }catch (Exception e){
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e);
-        }
     }
 
     // 사장 전용
     // 가게 주문 내용 확인하기
     @GetMapping("/cafe")
-    public ResponseEntity<?> getUserOrders(@RequestParam(name = "cafeId") Long cafeId) {
-        try {
+    public ResponseEntity<List<OrderRespDto>> getUserOrders(@RequestParam(name = "cafeId") Long cafeId) {
             List<OrderRespDto> response = orderService.getUserOrderInCafeWithConfirm(cafeId);
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(response);
-        }catch (Exception e){
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e);
-        }
-
     }
 
     //주문 상태 변경하기

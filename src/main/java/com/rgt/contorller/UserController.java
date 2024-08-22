@@ -42,43 +42,33 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login (@RequestBody UserReqDto reqDto){
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            reqDto.getUsername(),
-                            reqDto.getPassword()
-                )
-            );
-            //토큰 리턴
-            String accessToken = jwtConfig.generateToken((UserDetails) authentication.getPrincipal());
-            String refreshToken = jwtConfig.generateRefreshToken((UserDetails) authentication.getPrincipal());
+    public ResponseEntity<Map<String, Object>> login (@RequestBody UserReqDto reqDto){
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        reqDto.getUsername(),
+                        reqDto.getPassword()
+            )
+        );
+        //토큰 리턴
+        String accessToken = jwtConfig.generateToken((UserDetails) authentication.getPrincipal());
+        String refreshToken = jwtConfig.generateRefreshToken((UserDetails) authentication.getPrincipal());
 
-            // JWT 토큰을 헤더에 포함
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + accessToken);
-            headers.add("refreshToken", refreshToken);
+        // JWT 토큰을 헤더에 포함
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+        headers.add("refreshToken", refreshToken);
 
-            // 토큰과 함께 사용자 정보를 반환
-            Map<String, Object> responseBody = new HashMap<>();
-            responseBody.put("accessToken", accessToken);
-            responseBody.put("refreshToken", refreshToken);
-            responseBody.put("principal", authentication.getPrincipal());
+        // 토큰과 함께 사용자 정보를 반환
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("accessToken", accessToken);
+        responseBody.put("refreshToken", refreshToken);
+        responseBody.put("principal", authentication.getPrincipal());
 
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .headers(headers)
-                    .body(responseBody);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .headers(headers)
+                .body(responseBody);
 
-        }catch (Exception e){
-            log.info(e.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body(e);
-        }
 
     }
-
-
-
 }

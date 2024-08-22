@@ -1,6 +1,8 @@
 package com.rgt.contorller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rgt.dto.response.MenuRespDto;
+import com.rgt.entity.Cafe;
 import com.rgt.repository.CafeRepository;
 import com.rgt.service.CafeService;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +20,11 @@ public class CafeController {
 
     //카페 등록
     @PostMapping("")
-    public ResponseEntity<?> saveCafe (@RequestParam(name = "cafeNumber") Long cafeNumber){
-        try {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(cafeService.saveCafe(cafeNumber));
-        }catch (Exception e) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(e);
-        }
+    public ResponseEntity<Cafe> saveCafe(@RequestParam(name = "cafeNumber") Long cafeNumber) throws JsonProcessingException {
+        Cafe savedCafe = cafeService.saveCafe(cafeNumber);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(savedCafe);
     }
 
 
