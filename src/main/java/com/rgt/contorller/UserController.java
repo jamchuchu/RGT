@@ -14,6 +14,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpHeaders;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,14 +28,21 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
+@Tag(name = "User Management", description = "사용자 관리 API")
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtConfig jwtConfig;
 
-    //회원가입
+    @Operation(summary = "회원가입", description = "새로운 사용자를 등록합니다.")
+    @ApiResponse(responseCode = "201", description = "회원가입 성공",
+            content = @Content(schema = @Schema(implementation = UserDetails.class)))
     @PostMapping("/signup")
-    public ResponseEntity<UserDetails> signup(@RequestParam(name = "authority") Authority authority, @RequestBody UserReqDto reqDto){
+    public ResponseEntity<UserDetails> signup(
+            @Parameter(description = "사용자 권한", required = true)
+            @RequestParam(name = "authority") Authority authority,
+            @Parameter(description = "사용자 정보", required = true)
+            @RequestBody UserReqDto reqDto){
         UserDetails user = null;
         if(authority.equals(Authority.OWNER)){
             user = userService.saveUserForOwner(reqDto);
@@ -41,24 +54,26 @@ public class UserController {
                 .body(user);
     }
 
+    @Operation(summary = "로그인", description = "사용자 인증 및 토큰 발급")
+    @ApiResponse(responseCode = "200", description = "로그인 성공",
+            content = @Content(schema = @Schema(implementation = Map.class)))
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login (@RequestBody UserReqDto reqDto){
+    public ResponseEntity<Map<String, Object>> login (
+            @Parameter(description = "로그인 정보", required = true)
+            @RequestBody UserReqDto reqDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         reqDto.getUsername(),
                         reqDto.getPassword()
-            )
+                )
         );
-        //토큰 리턴
         String accessToken = jwtConfig.generateToken((UserDetails) authentication.getPrincipal());
         String refreshToken = jwtConfig.generateRefreshToken((UserDetails) authentication.getPrincipal());
 
-        // JWT 토큰을 헤더에 포함
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("refreshToken", refreshToken);
 
-        // 토큰과 함께 사용자 정보를 반환
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("accessToken", accessToken);
         responseBody.put("refreshToken", refreshToken);
@@ -68,7 +83,5 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .headers(headers)
                 .body(responseBody);
-
-
     }
 }
